@@ -1,4 +1,6 @@
-*.blade.php linguist-language=PHP 
-*.php linguist-language=PHP 
-*.css linguist-detectable=false 
-*.scss linguist-detectable=false
+*.blade.php linguist-language=PHP
+*.php linguist-language=PHP
+
+/public/js/* linguist-detectable=false
+/resources/js/* linguist-detectable=false
+/node_modules/* linguist-detectable=false
