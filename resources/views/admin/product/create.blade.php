@@ -224,6 +224,7 @@ $("#productForm").submit(function(event){
             $("button[type='submit']").prop('disabled',false);
 
         if(res['status'] == true){
+
              window.location.href = "{{route('product.index')}}";
         }else{
             var errors = res.errors;
@@ -241,6 +242,7 @@ $("#productForm").submit(function(event){
         }
         },
         error: function(){
+            $("button[type='submit']").prop('disabled',false);
             console.log("Something went wrong.");
         }
     });
@@ -269,6 +271,7 @@ Dropzone.autoDiscover = false;
 const dropzone = $("#image").dropzone({
     url: "{{route('temp-images.create')}}",
     maxFiles: 10,
+    parallelUploads: 1,
     paramName: 'image',
     addRemoveLinks: true,
     acceptedFiles: "image/jpeg,image/png,image/gif",
@@ -277,14 +280,21 @@ const dropzone = $("#image").dropzone({
     }, success: function(file, response){
         // $("#image_id").val(response.image_id);
         // console.log(response);
-    var html = `<div class="col-md-3"><div class="card">
+    var html = `<div class="col-md-3" id="image-row-${response.image_id}"><div class="card">
+    <input type="hidden" name="image_array[]" value="${response.image_id}">
     <img src="${response.ImagePath}" class="card-img-top" alt="">
     <div class="card-body">
-       <a href="#" class="btn btn-danger">Delete</a>
+       <a href="javascript:void(0)" onclick="deleteImage(${response.image_id})" class="btn btn-danger">Delete</a>
     </div>
     </div></div>`;
     $("#product-gallery").append(html);
+    }, complete: function(file){
+        this.removeFile(file);
     }
 });
+
+function deleteImage(id){
+    $("#image-row-"+id).remove();
+}
 </script>
 @endsection

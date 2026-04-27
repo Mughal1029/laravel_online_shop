@@ -13,7 +13,7 @@ class TempImagesController extends Controller
         $image = $request->image;
         if(!empty($image)){
             $ext = $image->getClientOriginalExtension();
-            $newName = time().'.'.$ext;
+            $newName = uniqid().'_'.time().'.'.$ext;
             $tempImage = new TempImage();
             $tempImage->name = $newName;
             $tempImage->save();
@@ -23,7 +23,7 @@ class TempImagesController extends Controller
             // Generate thumbnail
             $sourcePath = public_path().'/temp/'.$newName;
             $destPath = public_path().'/temp/thumb/'.$newName;
-           $manager = new ImageManager(new Driver());
+            $manager = new ImageManager(new Driver());
 
             $image = $manager->read($sourcePath);
             $image->cover(300, 275);

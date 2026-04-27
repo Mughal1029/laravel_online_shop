@@ -48,21 +48,30 @@
 									<div class="col-md-6">
 										<div class="mb-3">
 											<label for="slug">Slug</label>
-											<input type="text" value="{{old('slug',$subCategory->slug)}}" name="slug" id="slug" readonly class="form-control" placeholder="Slug">
+											<input type="text" value="{{old('slug',$subCategory->slug)}}" name="slug" id="slug" class="form-control" placeholder="Slug">
                                             <p></p>	
 										</div>
 									</div>
                                     
-                                    <div class="col-md-6">
-										<div class="mb-3">
-											<label for="status">Status</label>
-											<select name="status" id="status" class="form-control">
-                                                <option {{ ($subCategory->status == 1) ? 'selected' : ''}} value="1">Active</option>
-                                                <option {{ ($subCategory->status == 0) ? 'selected' : ''}} value="0">Block</option>
-                                            </select>
-                                            <p></p>
-										</div>
-									</div>
+                        <div class="col-md-6">
+							<div class="mb-3">
+								<label for="status">Status</label>
+									<select name="status" id="status" class="form-control">
+                                    <option {{ ($subCategory->status == 1) ? 'selected' : ''}} value="1">Active</option>
+                                    <option {{ ($subCategory->status == 0) ? 'selected' : ''}} value="0">Block</option>
+                                  </select>
+                             <p></p>
+							</div>
+						</div>
+                       <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="status">Show on Home</label>
+                                <select name="showHome" id="showHome" class="form-control">
+                                    <option value="No" {{($subCategory->showHome == 'No') ? 'selected' : ''}}>No</option>
+                                    <option value="Yes" {{ ($subCategory->showHome == 'Yes') ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
 								</div>
 							</div>							
 						</div>

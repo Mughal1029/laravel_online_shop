@@ -42,34 +42,26 @@ class CategoryController extends Controller
 
            // Save Image Here......
           if(!empty($request->image_id)){
-    $tempImage = TempImage::find($request->image_id);
+          $tempImage = TempImage::find($request->image_id);
+          if($tempImage != null){
 
-    if($tempImage != null){
+          $extArray = explode('.',$tempImage->name);
+          $ext = last($extArray);
 
-        $extArray = explode('.',$tempImage->name);
-        $ext = last($extArray);
+          $newImageName = $category->id.'.'.$ext;
 
-        $newImageName = $category->id.'.'.$ext;
+          $sPath = public_path('temp/'.$tempImage->name);
+          $dPath = public_path('uploads/category/'.$newImageName);
 
-        $sPath = public_path('temp/'.$tempImage->name);
-        $dPath = public_path('uploads/category/'.$newImageName);
-
-        if(File::exists($sPath)){
-
+          if(File::exists($sPath)){
             File::copy($sPath, $dPath);
 
             // Thumbnail
             $thumbPath = public_path('uploads/category/thumb/'.$newImageName);
-
             $manager = new ImageManager(new Driver());
             $image = $manager->read($sPath);
-
-            $image->fit(450, 600, function($constraint){
-                $constraint->upsize();
-            });
-
+            $image->cover(450, 600);
             $image->save($thumbPath);
-
             $category->image = $newImageName;
             $category->save();
         }
@@ -91,7 +83,7 @@ class CategoryController extends Controller
 
     public function edit($id){
         $category =Category::find($id);
-        if(empty($id)){
+        if(empty($category)){
             return redirect()->route('categories.index');
         }
          return view('admin.category.edit', compact('category'));
@@ -99,7 +91,7 @@ class CategoryController extends Controller
 
     public function update(Request $request, $id){
         $category = Category::find($id);
-        if(empty($id)){
+        if(empty($category)){
             return response()->json([
                 'status' => false,
                 'notFound' => true,
@@ -127,8 +119,9 @@ class CategoryController extends Controller
 
             if(!empty($request->image_id)){
                 $tempImage = TempImage::find($request->image_id);
-                $extArray = explode('.',$tempImage->name);
-                $ext = last($extArray);
+             if($tempImage != null){
+                $ext = pathinfo($tempImage->name, PATHINFO_EXTENSION);
+
 
                 $newImageName = $category->id.'-'.time().'.'.$ext;
                 $sPath = public_path().'/temp/'.$tempImage->name;
@@ -138,21 +131,23 @@ class CategoryController extends Controller
                 $thumbPath = public_path('uploads/category/thumb/'.$newImageName);
                 $manager = new ImageManager(new Driver());
                 $image = $manager->read($sPath);
-                // $image->resize(450,600);
-                $image->fit(450, 600, function($constraint){
-                    $constraint->upsize();
-                });
+                $image->cover(450, 600);
                 $image->save($thumbPath);
+                $category->image = $newImageName;
+                $category->save();
 
                 //Delete old IMages
+                if($oldImage){
                 File::delete(public_path().'/uploads/category/'.$oldImage);
                 File::delete(public_path().'/uploads/category/thumb/'.$oldImage);
+                }
+            }
             }
         $request->session()->flash('success', 'Category updated successfully.');
 
         return response()->json([
             'status' => true,
-            'message' => 'Category added successfully.',
+            'message' => 'Category updated successfully.',
         ]);
         } else{
             return response()->json([

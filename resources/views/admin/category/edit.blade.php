@@ -65,8 +65,8 @@
                             <div class="mb-3">
                                 <label for="status">Show on Home</label>
                                 <select name="showHome" id="showHome" class="form-control">
-                                    <option value="Yes" {{ ($category->showHome == 'Yes') ? 'selected' : ''}}>Yes</option>
                                     <option value="No" {{($category->showHome == 'No') ? 'selected' : ''}}>No</option>
+                                    <option value="Yes" {{ ($category->showHome == 'Yes') ? 'selected' : ''}}>Yes</option>
                                 </select>
                             </div>
                         </div>
